@@ -1,0 +1,374 @@
+<div class="row">
+    <div class="col-md-6 col-12">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="errorMessages.length">
+            <ul class="overflow-hidden list-unstyled m-0">
+                <li *ngFor='let errorMessage of errorMessages'>{{errorMessage}}</li>
+            </ul>
+        </div>
+        <div *ngIf="currentStep === shipmentCreationSteps.ShipmentCreationStep">
+            <h3>Step First: Create Shipment:</h3>
+            <hr>
+            <form [formGroup]="shipmentForm" (ngSubmit)="onSubmitShipment()">
+                <div class="form-group row my-3">
+                    <label class="col-sm-4 col-form-label" for="shipmentNumber">Shipment Number <span
+                            class="text-danger">*</span></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" type="text" placeholder="Shipment Number" id="shipmentNumber"
+                            formControlName="shipmentNumber"
+                            [ngClass]="{ 'is-invalid': shipmentSubmitted && shipmentFormCtrls['shipmentNumber'].errors }">
+                        <div *ngIf="shipmentSubmitted && shipmentFormCtrls['shipmentNumber'].errors"
+                            class="invalid-feedback d-block">
+                            <div *ngIf="shipmentFormCtrls['shipmentNumber'].errors['required']">Shipment number is
+                                required</div>
+                            <div *ngIf="shipmentFormCtrls['shipmentNumber'].errors['pattern']">Incorrect shipment number
+                                format</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row my-3">
+                    <label class="col-sm-4 col-form-label" for="airport">Airport <span
+                            class="text-danger">*</span></label>
+                    <div class="col-sm-8">
+                        <select class="form-select" id="airport" formControlName="airport"
+                            [ngClass]="{ 'is-invalid': shipmentSubmitted && shipmentFormCtrls['airport'].errors }">
+                            <option value="" selected>Please select airport</option>
+                            <option *ngFor='let airport of airports' value="{{airport}}">{{airport}}</option>
+                        </select>
+                        <div *ngIf="shipmentSubmitted && shipmentFormCtrls['airport'].errors"
+                            class="invalid-feedback d-block">
+                            <div *ngIf="shipmentFormCtrls['airport'].errors['required']">Airport is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row my-3">
+                    <label class="col-sm-4 col-form-label" for="flightNumber">Flight Number <span
+                            class="text-danger">*</span></label>
+                    <div class="col-sm-8">
+                        <input class="form-control" type="text" placeholder="Flight Number" id="flightNumber"
+                            formControlName="flightNumber"
+                            [ngClass]="{ 'is-invalid': shipmentSubmitted && shipmentFormCtrls['flightNumber'].errors }">
+                        <div *ngIf="shipmentSubmitted && shipmentFormCtrls['flightNumber'].errors"
+                            class="invalid-feedback d-block">
+                            <div *ngIf="shipmentFormCtrls['flightNumber'].errors['required']">Flight number is required
+                            </div>
+                            <div *ngIf="shipmentFormCtrls['flightNumber'].errors['pattern']">Incorrect flight number
+                                format</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row my-3">
+                    <label class="col-sm-4 col-form-label" for="flightDate">Flight Date <span
+                            class="text-danger">*</span></label>
+                    <div class="col-sm-8">
+                        <input [ngClass]="{ 'is-invalid': shipmentSubmitted && shipmentFormCtrls['flightDate'].errors }"
+                            type="date" class="form-control" id="flightDate" formControlName="flightDate">
+                        <div *ngIf="shipmentSubmitted && shipmentFormCtrls['flightDate'].errors"
+                            class="invalid-feedback d-block">
+                            <div *ngIf="shipmentFormCtrls['flightDate'].errors['required']">Flight date is required
+                            </div>
+                            <div *ngIf="shipmentFormCtrls['flightDate'].errors['invalidDate']">Flight date couldn't be
+                                in past</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success">To Bags Creation</button>
+                </div>
+            </form>
+        </div>
+        <div *ngIf="currentStep === shipmentCreationSteps.BagCreationStep">
+            <h3>Step Second: Create Bags:</h3>
+            <hr>
+            <div *ngFor="let bagForm of bagForms">
+                <form [formGroup]="bagForm" *ngIf="isParcelBag(bagForm)">
+                    <div class="d-flex justify-content-between">
+                        <h5>Bag with parcels:</h5>
+                        <i role="button" class="text-danger user-select-none" (click)="removeParcelBag(bagForm)">remove
+                            bag</i>
+                    </div>
+                    <div class="form-group row my-3">
+                        <label class="col-sm-4 col-form-label" for="bagNumber">Bag Number <span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="text" placeholder="Bag Number" id="bagNumber"
+                                formControlName="bagNumber"
+                                [ngClass]="{ 'is-invalid': bagsSubmitted && bagForm.controls['bagNumber'].errors }">
+                            <div *ngIf="bagsSubmitted && bagForm.controls['bagNumber'].errors"
+                                class="invalid-feedback d-block">
+                                <div *ngIf="bagForm.controls['bagNumber'].errors['required']">Bag number is required
+                                </div>
+                                <div *ngIf="bagForm.controls['bagNumber'].errors['maxlength']">Max bag number length
+                                    is 15 characters</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form [formGroup]="bagForm" *ngIf="letterBagForms.includes(bagForm)">
+                    <div class="d-flex justify-content-between">
+                        <h5>Bag with letters:</h5>
+                        <i role="button" class="text-danger user-select-none" (click)="removeLetterBag(bagForm)">remove
+                            bag</i>
+                    </div>
+                    <div class="form-group row my-3">
+                        <label class="col-sm-4 col-form-label" for="bagNumber">Bag Number <span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="text" placeholder="Bag Number" id="bagNumber"
+                                formControlName="bagNumber"
+                                [ngClass]="{ 'is-invalid': bagsSubmitted && bagForm.controls['bagNumber'].errors }">
+                            <div *ngIf="bagsSubmitted && bagForm.controls['bagNumber'].errors"
+                                class="invalid-feedback d-block">
+                                <div *ngIf="bagForm.controls['bagNumber'].errors['required']">Bag number is required
+                                </div>
+                                <div *ngIf="bagForm.controls['bagNumber'].errors['maxlength']">Max bag number length
+                                    is 15 characters</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-3">
+                        <label class="col-sm-4 col-form-label" for="countOfLetters">Count Of Letters <span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="number" placeholder="Count Of Letters" id="countOfLetters"
+                                formControlName="countOfLetters"
+                                [ngClass]="{ 'is-invalid': bagsSubmitted && bagForm.controls['countOfLetters'].errors }">
+                            <div *ngIf="bagsSubmitted && bagForm.controls['countOfLetters'].errors"
+                                class="invalid-feedback d-block">
+                                <div *ngIf="bagForm.controls['countOfLetters'].errors['required']">Count of letters
+                                    is
+                                    required</div>
+                                <div *ngIf="bagForm.controls['countOfLetters'].errors['min']">Incorrect count of
+                                    letters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-3">
+                        <label class="col-sm-4 col-form-label" for="weight">Weight <span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="number" placeholder="Weight" id="weight"
+                                formControlName="weight"
+                                [ngClass]="{ 'is-invalid': bagsSubmitted && bagForm.controls['weight'].errors }">
+                            <div *ngIf="bagsSubmitted && bagForm.controls['weight'].errors"
+                                class="invalid-feedback d-block">
+                                <div *ngIf="bagForm.controls['weight'].errors['required']">Weight
+                                    is
+                                    required</div>
+                                <div *ngIf="bagForm.controls['weight'].errors['min']">Incorrect weight
+                                </div>
+                                <div *ngIf="bagForm.controls['weight'].errors['pattern']">Only 3 digits after the
+                                    comma are allowed
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row my-3">
+                        <label class="col-sm-4 col-form-label" for="weight">Price <span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="number" placeholder="Price" id="price"
+                                formControlName="price"
+                                [ngClass]="{ 'is-invalid': bagsSubmitted && bagForm.controls['price'].errors }">
+                            <div *ngIf="bagsSubmitted && bagForm.controls['price'].errors"
+                                class="invalid-feedback d-block">
+                                <div *ngIf="bagForm.controls['price'].errors['required']">Price
+                                    is
+                                    required</div>
+                                <div *ngIf="bagForm.controls['price'].errors['min']">Incorrect price
+                                </div>
+                                <div *ngIf="bagForm.controls['price'].errors['pattern']">Only 2 digits after the
+                                    comma are allowed
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-dark" (click)="addParcelBag()">Add Parcel Bag</button>
+                <button type="button" class="btn btn-outline-dark" (click)="addLetterBag()">Add Letter Bag</button>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-end" *ngIf="bagNumberMatch">
+                <p class="text-danger">
+                    *Bag numbers cannot match
+                </p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary"
+                    (click)="resetValidation(); currentStep = shipmentCreationSteps.ShipmentCreationStep">Previous</button>
+                <button [disabled]="!bagForms.length" type="button" class="btn btn-success" (click)="onSubmitBags()">To
+                    Parcels Creation</button>
+            </div>
+        </div>
+        <div *ngIf="currentStep === shipmentCreationSteps.ParcelCreationStep">
+            <h3>Step Third: Create Parcels:</h3>
+            <hr>
+            <div *ngFor="let parcelBagForm of parcelBagForms.keys()">
+                <div class="d-flex justify-content-between">
+                    <h6>Bag number {{parcelBagForm.controls['bagNumber'].value}}</h6>
+                    <button type="button" class="btn btn-outline-dark" (click)="addParcel(parcelBagForm)">Add
+                        Parcel</button>
+                </div>
+                <div class="ps-4" *ngFor="let parcelForm of parcelBagForms.get(parcelBagForm); let index = index">
+                    <span><b>Parcel #{{index + 1}}</b><i role="button" class="text-danger user-select-none"
+                            (click)="removeParcel(parcelBagForm, parcelForm)"> (remove parcel)</i></span>
+                    <form [formGroup]="parcelForm">
+                        <div class="form-group row my-3">
+                            <label class="col-sm-4 col-form-label" for="parcelNumber">Parcel Number <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" placeholder="Parcel Number" id="parcelNumber"
+                                    formControlName="parcelNumber"
+                                    [ngClass]="{ 'is-invalid': parcelsSubmitted && parcelForm.controls['parcelNumber'].errors }">
+                                <div *ngIf="parcelsSubmitted && parcelForm.controls['parcelNumber'].errors"
+                                    class="invalid-feedback d-block">
+                                    <div *ngIf="parcelForm.controls['parcelNumber'].errors['required']">Parcel Number is
+                                        required
+                                    </div>
+                                    <div *ngIf="parcelForm.controls['parcelNumber'].errors['pattern']">Incorrect parcel
+                                        number format</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row my-3">
+                            <label class="col-sm-4 col-form-label" for="recipientName">Recipient Name <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" placeholder="Recipient Name" id="recipientName"
+                                    formControlName="recipientName"
+                                    [ngClass]="{ 'is-invalid': parcelsSubmitted && parcelForm.controls['recipientName'].errors }">
+                                <div *ngIf="parcelsSubmitted && parcelForm.controls['recipientName'].errors"
+                                    class="invalid-feedback d-block">
+                                    <div *ngIf="parcelForm.controls['recipientName'].errors['required']">Recipient Name
+                                        is
+                                        required
+                                    </div>
+                                    <div *ngIf="parcelForm.controls['recipientName'].errors['maxlength']">Max recipient
+                                        number length is 100 characters</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row my-3">
+                            <label class="col-sm-4 col-form-label" for="destinationCountry">Destination Country <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" placeholder="Destination Country"
+                                    id="destinationCountry" formControlName="destinationCountry"
+                                    [ngClass]="{ 'is-invalid': parcelsSubmitted && parcelForm.controls['destinationCountry'].errors }">
+                                <div *ngIf="parcelsSubmitted && parcelForm.controls['destinationCountry'].errors"
+                                    class="invalid-feedback d-block">
+                                    <div *ngIf="parcelForm.controls['destinationCountry'].errors['required']">
+                                        Destination Country is
+                                        required
+                                    </div>
+                                    <div *ngIf="parcelForm.controls['destinationCountry'].errors['pattern']">Incorrect
+                                        destination country format</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row my-3">
+                            <label class="col-sm-4 col-form-label" for="weight">Weight <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="number" placeholder="Weight" id="weight"
+                                    formControlName="weight"
+                                    [ngClass]="{ 'is-invalid': parcelsSubmitted && parcelForm.controls['weight'].errors }">
+                                <div *ngIf="parcelsSubmitted && parcelForm.controls['weight'].errors"
+                                    class="invalid-feedback d-block">
+                                    <div *ngIf="parcelForm.controls['weight'].errors['required']">
+                                        Weight is
+                                        required
+                                    </div>
+                                    <div *ngIf="parcelForm.controls['weight'].errors['pattern']">Incorrect
+                                        weight</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row my-3">
+                            <label class="col-sm-4 col-form-label" for="price">Price <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <input class="form-control" type="number" placeholder="Price" id="price"
+                                    formControlName="price"
+                                    [ngClass]="{ 'is-invalid': parcelsSubmitted && parcelForm.controls['price'].errors }">
+                                <div *ngIf="parcelsSubmitted && parcelForm.controls['price'].errors"
+                                    class="invalid-feedback d-block">
+                                    <div *ngIf="parcelForm.controls['price'].errors['required']">
+                                        Price is
+                                        required
+                                    </div>
+                                    <div *ngIf="parcelForm.controls['price'].errors['pattern']">Incorrect
+                                        price</div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                </div>
+                <hr>
+            </div>
+            <div class="d-flex justify-content-end" *ngIf="parcelMatch">
+                <p class="text-danger">
+                    *Parcel numbers cannot match
+                </p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary"
+                    (click)="resetValidation(); currentStep = shipmentCreationSteps.BagCreationStep">Previous</button>
+                <button [disabled]="isFinalizeStepDisabled" type="button" class="btn btn-success"
+                    (click)="onSubmitParcels()">To Finalize Step</button>
+            </div>
+        </div>
+        <div *ngIf="currentStep === shipmentCreationSteps.FinalizeCreationStep">
+            <h3>Finalize shipment:</h3>
+            <hr>
+            <ul class="overflow-hidden list-unstyled m-0">
+                <li><i>Shipment Number:</i> {{shipment.shipmentNumber}}</li>
+                <li><i>Airport:</i> {{shipment.airport}}</li>
+                <li><i>Flight Number:</i> {{shipment.flightNumber}}</li>
+                <li><i>Flight Date:</i> {{shipment.flightDate | date: 'EEEE, MMMM d, y'}}</li>
+            </ul>
+            <hr>
+            <div *ngIf="shipment.parcelBags.length" class="mb-3">
+                <h6>Bags with parcels:</h6>
+                <div class="ps-4" *ngFor="let parcelBag of shipment.parcelBags; let firstParcelBag = first">
+                    <hr *ngIf="!firstParcelBag">
+                    <ul class="overflow-hidden list-unstyled m-0">
+                        <li><i>Bag Number:</i> {{parcelBag.bagNumber}}</li>
+                    </ul>
+                    <hr>
+                    <div class="ps-4" *ngFor="let parcel of parcelBag.parcels; let firstParcel = first">
+                        <hr *ngIf="!firstParcel">
+                        <ul class="overflow-hidden list-unstyled m-0">
+                            <li><i>Parcel Number:</i> {{parcel.parcelNumber}}</li>
+                            <li><i>Recipient Name:</i> {{parcel.recipientName}}</li>
+                            <li><i>Destination Country:</i> {{parcel.destinationCountry}}</li>
+                            <li><i>Weight:</i> {{parcel.weight | number : '1.3-3'}}</li>
+                            <li><i>Price:</i> {{parcel.price | currency: 'EUR'}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="shipment.letterBags.length" class="mb-3">
+                <h6>Bags with letters:</h6>
+                <div class="ps-4" *ngFor="let letterBag of shipment.letterBags; let firstLetterBag = first">
+                    <hr *ngIf="!firstLetterBag">
+                    <ul class="list-unstyled m-0">
+                        <li><i>Bag Number:</i> {{letterBag.bagNumber}}</li>
+                        <li><i>Count Of Letters:</i> {{letterBag.countOfLetters}}</li>
+                        <li><i>Weight:</i> {{letterBag.weight | number : '1.3-3'}}</li>
+                        <li><i>Price:</i> {{letterBag.price | currency: 'EUR'}}</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" (click)="returnToEdit()">Return To Edit</button>
+                <button type="button" class="btn btn-primary" (click)="finalSubmit()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,2 @@
+First, run the `docker run --name shippingdb -e ACCEPT_EULA=Y -e SA_PASSWORD=yourStrongPassword12345 -e MSSQL_PID=Express -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest-ubuntu` command and wait until it finishes.
+Then run the `docker compose up -d` command and visit http://localhost/

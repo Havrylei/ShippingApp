@@ -1,0 +1,11 @@
+FROM node:latest AS build
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
+RUN npm install
+COPY . .
+RUN npm run build -- --configuration production --aot
+
+FROM nginx:latest
+EXPOSE 80
+COPY default.conf /etc/nginx/conf.d/
+COPY --from=build /usr/src/app/dist/shipping-ui /usr/share/nginx/html

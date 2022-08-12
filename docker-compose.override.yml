@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  shippingapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:7174
+    ports:
+      - 7174:7174
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  shippingui:
+    ports:
+      - 80:80

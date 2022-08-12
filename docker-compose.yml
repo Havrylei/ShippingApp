@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  shippingapi:
+    image: shippingapi
+    build:
+      context: ShippingApi/ShippingApi/
+      dockerfile: Dockerfile
+  shippingui:
+    image: shipping
+    build:
+      context: ShippingUI/
+      dockerfile: Dockerfile
+    depends_on:
+      - shippingapi

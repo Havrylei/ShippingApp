@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success alert-dismissible fade show mb-3" role="alert" *ngIf="msg">
+            {{msg}}
+        </div>
+        <div class="list-group">
+            <div role="button"
+                (click)="clickedShipmentNumber = clickedShipmentNumber === shipment.shipmentNumber ? undefined : shipment.shipmentNumber"
+                class="list-group-item flex-column align-items-start" *ngFor="let shipment of shipments">
+                <ul class="overflow-hidden list-unstyled m-0">
+                    <li><i>Shipment Number:</i> {{shipment.shipmentNumber}}</li>
+                    <li><i>Airport:</i> {{shipment.airport}}</li>
+                    <li><i>Flight Number:</i> {{shipment.flightNumber}}</li>
+                    <li><i>Flight Date:</i> {{shipment.flightDate | date: 'EEEE, MMMM d, y'}}</li>
+                </ul>
+                <div *ngIf="clickedShipmentNumber === shipment.shipmentNumber">
+                    <hr>
+                    <div *ngFor="let letterBag of shipment.letterBags" class="ps-4">
+                        <ul class="overflow-hidden list-unstyled m-0">
+                            <li><i>Bag Number:</i> {{letterBag.bagNumber}}</li>
+                            <li><i>Type:</i> Bag With {{letterBag.countOfLetters > 1 ? 'Letters' : 'Letter'}}</li>
+                            <li><i>Total Letters:</i> {{letterBag.countOfLetters}}</li>
+                            <li><i>Total Price:</i> {{letterBag.price | currency: 'EUR'}}</li>
+                        </ul>
+                        <hr>
+                    </div>
+                    <div *ngFor="let parcelBag of shipment.parcelBags" class="ps-4">
+                        <ul class="overflow-hidden list-unstyled m-0">
+                            <li><i>Bag Number:</i> {{parcelBag.bagNumber}}</li>
+                            <li><i>Type:</i> Bag With {{parcelBag.parcels.length > 1 ? 'Parcels' : 'Parcel'}}</li>
+                            <li><i>Total Parcels:</i> {{parcelBag.parcels.length}}</li>
+                            <li><i>Total Price:</i> {{getParcelsTotalPrice(parcelBag.parcels) | currency: 'EUR'}}</li>
+                        </ul>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+            <p *ngIf="!shipments.length">
+                There are no shipments yet
+            </p>
+        </div>
+    </div>
+</div>
