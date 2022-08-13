@@ -199,8 +199,9 @@
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary"
                     (click)="resetValidation(); currentStep = shipmentCreationSteps.ShipmentCreationStep">Previous</button>
-                <button [disabled]="!bagForms.length" type="button" class="btn btn-success" (click)="onSubmitBags()">To
-                    Parcels Creation</button>
+                <button [disabled]="!bagForms.length" type="button" class="btn btn-success" (click)="onSubmitBags()">
+                    {{parcelBagForms.size ? 'To Parcels Creation' : 'To Finalize Step'}}
+                </button>
             </div>
         </div>
         <div *ngIf="currentStep === shipmentCreationSteps.ParcelCreationStep">
