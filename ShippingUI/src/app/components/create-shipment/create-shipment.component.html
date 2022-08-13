@@ -368,7 +368,8 @@
             <hr>
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary" (click)="returnToEdit()">Return To Edit</button>
-                <button type="button" class="btn btn-primary" (click)="finalSubmit()">Create</button>
+                <button type="button" [disabled]="sendingRequest" class="btn btn-primary"
+                    (click)="finalSubmit()">Create</button>
             </div>
         </div>
     </div>

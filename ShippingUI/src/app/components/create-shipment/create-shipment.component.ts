@@ -32,6 +32,7 @@ export class CreateShipmentComponent implements OnInit {
   parcelsSubmitted: boolean = false;
   bagNumberMatch: boolean = false;
   parcelMatch: boolean = false;
+  sendingRequest: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private service: ShipmentService, private router: Router) {
     this.shipmentForm = this.formBuilder.group(ShipmentValidator.validator());
@@ -127,16 +128,20 @@ export class CreateShipmentComponent implements OnInit {
   }
 
   finalSubmit(): void {
+    this.sendingRequest = true;
+
     this.service.createShipment(this.shipment).subscribe(
       _ => {
         sessionStorage.setItem('msg', 'The shipment \'' + this.shipment.shipmentNumber.toUpperCase() + '\' has been created successfully');
         this.router.navigate(['/']);
       },
       errorResponse => {
+        this.sendingRequest = false
+
         if (errorResponse.hasOwnProperty('error') && errorResponse.error.hasOwnProperty('errorMessages')) {
           this.errorMessages = errorResponse.error.errorMessages;
         } else {
-          this.errorMessages.push('Service temporarily unavailable');
+          this.errorMessages = ['Service temporarily unavailable'];
         }
       }
     );
