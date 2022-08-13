@@ -8,7 +8,7 @@ export default class ShipmentFormMapper {
             shipmentNumber: ctrls['shipmentNumber'].value,
             airport: ctrls['airport'].value,
             flightNumber: ctrls['flightNumber'].value,
-            flightDate: ctrls['flightDate'].value
+            flightDate: new Date(ctrls['flightDate'].value)
         };
 
         return shipment;
