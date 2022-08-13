@@ -4,13 +4,10 @@ export default class ShipmentValidator {
     static validator() {
         const dateNotInPastValidator = (control: AbstractControl): { [key: string]: boolean } | null => {
             if (control?.value) {
-                let today = new Date();
-                let dateToCheck = new Date(control.value);
+                let todayDateTime = new Date();
+                let dateTimeToCheck = new Date(control.value);
 
-                today.setHours(0, 0, 0, 0);
-                dateToCheck.setHours(0, 0, 0, 0);
-
-                if (dateToCheck < today) {
+                if (dateTimeToCheck < todayDateTime) {
                     return { 'invalidDate': true }
                 }
             }

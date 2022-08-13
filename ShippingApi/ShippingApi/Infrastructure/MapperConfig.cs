@@ -26,7 +26,7 @@ namespace ShippingApi.Infrastructure
                 .ForMember(d => d.ShipmentNumber, o => o.MapFrom(s => s.ShipmentNumber))
                 .ForMember(d => d.Airport, o => o.MapFrom(s => s.Airport))
                 .ForMember(d => d.FlightNumber, o => o.MapFrom(s => s.FlightNumber))
-                .ForMember(d => d.FlightDate, o => o.MapFrom(s => s.FlightDate.Date))
+                .ForMember(d => d.FlightDate, o => o.MapFrom(s => s.FlightDate))
                 .ForMember(d => d.LetterBags, o => o.MapFrom(s => s.LetterBags))
                 .ForMember(d => d.ParcelBags, o => o.MapFrom(s => s.ParcelBags));
             CreateMap<ParcelDto, Parcel>()
@@ -47,7 +47,7 @@ namespace ShippingApi.Infrastructure
                 .ForMember(d => d.ShipmentNumber, o => o.MapFrom(s => s.ShipmentNumber.ToUpper()))
                 .ForMember(d => d.Airport, o => o.MapFrom(s => s.Airport))
                 .ForMember(d => d.FlightNumber, o => o.MapFrom(s => s.FlightNumber.ToUpper()))
-                .ForMember(d => d.FlightDate, o => o.MapFrom(s => s.FlightDate))
+                .ForMember(d => d.FlightDate, o => o.MapFrom(s => s.FlightDate.ToUniversalTime()))
                 .ForMember(d => d.LetterBags, o => o.MapFrom(s => s.LetterBags))
                 .ForMember(d => d.ParcelBags, o => o.MapFrom(s => s.ParcelBags));
         }

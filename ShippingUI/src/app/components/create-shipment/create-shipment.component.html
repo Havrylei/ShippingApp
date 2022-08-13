@@ -61,7 +61,7 @@
                             class="text-danger">*</span></label>
                     <div class="col-sm-8">
                         <input [ngClass]="{ 'is-invalid': shipmentSubmitted && shipmentFormCtrls['flightDate'].errors }"
-                            type="date" class="form-control" id="flightDate" formControlName="flightDate">
+                            type="datetime-local" class="form-control" id="flightDate" formControlName="flightDate">
                         <div *ngIf="shipmentSubmitted && shipmentFormCtrls['flightDate'].errors"
                             class="invalid-feedback d-block">
                             <div *ngIf="shipmentFormCtrls['flightDate'].errors['required']">Flight date is required
@@ -329,7 +329,7 @@
                 <li><i>Shipment Number:</i> {{shipment.shipmentNumber}}</li>
                 <li><i>Airport:</i> {{shipment.airport}}</li>
                 <li><i>Flight Number:</i> {{shipment.flightNumber}}</li>
-                <li><i>Flight Date:</i> {{shipment.flightDate | date: 'EEEE, MMMM d, y'}}</li>
+                <li><i>Flight Date:</i> {{shipment.flightDate | date: 'MMM d, y, h:mm:ss a'}}</li>
             </ul>
             <hr>
             <div *ngIf="shipment.parcelBags.length" class="mb-3">

@@ -10,7 +10,7 @@ namespace ShippingApi.Infrastructure.Attributes
         {
             var date = (DateTime)value;
 
-            if (date.Date >= DateTime.UtcNow.Date)
+            if (date.ToUniversalTime() > DateTime.UtcNow)
             {
                 return ValidationResult.Success;
             }

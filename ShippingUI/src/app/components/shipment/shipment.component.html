@@ -11,7 +11,7 @@
                     <li><i>Shipment Number:</i> {{shipment.shipmentNumber}}</li>
                     <li><i>Airport:</i> {{shipment.airport}}</li>
                     <li><i>Flight Number:</i> {{shipment.flightNumber}}</li>
-                    <li><i>Flight Date:</i> {{shipment.flightDate | date: 'EEEE, MMMM d, y'}}</li>
+                    <li><i>Flight Date:</i> {{convertUtcToLocal(shipment.flightDate) | date: 'MMM d, y, h:mm:ss a'}}</li>
                 </ul>
                 <div *ngIf="clickedShipmentNumber === shipment.shipmentNumber">
                     <hr>

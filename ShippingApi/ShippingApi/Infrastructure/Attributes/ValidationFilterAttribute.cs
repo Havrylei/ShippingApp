@@ -9,9 +9,9 @@ namespace ShippingApi.Infrastructure.Attributes
         {
             if (!context.ModelState.IsValid)
             {
-                var errorMessage = context.ModelState.Values.First().Errors.First().ErrorMessage;
+                var errorMessages = context.ModelState.Values.SelectMany(x => x.Errors.Select(y => y.ErrorMessage));
 
-                context.Result = new BadRequestObjectResult(new { errorMessage });
+                context.Result = new BadRequestObjectResult(new { errorMessages });
             }
         }
     }

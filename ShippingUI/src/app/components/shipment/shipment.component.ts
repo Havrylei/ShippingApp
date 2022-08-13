@@ -36,4 +36,16 @@ export class ShipmentComponent implements OnInit {
   getParcelsTotalPrice(parcels: Parcel[]): number {
     return parcels.reduce((sum, p) => sum + p.price, 0);
   }
+
+  convertUtcToLocal(date: Date): Date {
+    date = new Date(date);
+
+    let localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+    let offset = date.getTimezoneOffset() / 60;
+    let hours = date.getHours();
+
+    localDate.setHours(hours - offset);
+
+    return localDate;
+  }
 }
