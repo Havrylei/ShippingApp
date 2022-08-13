@@ -5,8 +5,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:7174
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password12345
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/ShippingApi.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${ShippingApiCertPassword}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/ShippingApiCert.pfx
     ports:
       - 7174:7174
     volumes:
