@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Shipment } from '../models/shipment';
 
-const BASE_URL:string = 'http://localhost:7174/api';
+const BASE_URL:string = 'https://localhost:7174/api';
 
 @Injectable()
 export class ShipmentService {

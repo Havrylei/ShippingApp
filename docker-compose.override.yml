@@ -3,13 +3,14 @@ version: '3.4'
 services:
   shippingapi:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:7174
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:7174
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password12345
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/ShippingApi.pfx
     ports:
       - 7174:7174
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ~/.aspnet/https:/https:ro
   shippingui:
     ports:
       - 80:80
