@@ -3,27 +3,26 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateShipment } from '../models/create-shipment-models/create-shipment';
 import { ViewShipment } from '../models/view-shipment-models/view-shipment';
-
-const BASE_URL: string = 'https://localhost:7174/api';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ShipmentService {
     constructor(private http: HttpClient) { }
 
     getShipments(): Observable<ViewShipment[]> {
-        const url = BASE_URL + '/Shipment';
+        const url = environment.apiAddress + '/Shipment';
 
         return this.http.get<ViewShipment[]>(url);
     }
 
     createShipment(shipment: CreateShipment) {
-        const url = BASE_URL + '/Shipment/Create';
+        const url = environment.apiAddress + '/Shipment/Create';
 
         return this.http.post(url, shipment);
     }
 
     getAirports() {
-        const url = BASE_URL + '/Shipment/GetAirports';
+        const url = environment.apiAddress + '/Shipment/GetAirports';
 
         return this.http.get<string[]>(url);
     }
