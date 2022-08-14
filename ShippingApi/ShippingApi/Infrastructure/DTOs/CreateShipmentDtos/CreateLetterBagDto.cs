@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static ShippingApi.Infrastructure.Constants;
 
-namespace ShippingApi.Infrastructure.DTOs
+namespace ShippingApi.Infrastructure.DTOs.CreateShipmentDtos
 {
-    public class LetterBagDto
+    public class CreateLetterBagDto
     {
         [Required]
         [StringLength(BagNumberMaxSize, ErrorMessage = "Max bag number length is 15 characters")]

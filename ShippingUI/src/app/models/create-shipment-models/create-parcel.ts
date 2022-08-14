@@ -1,4 +1,4 @@
-export interface Parcel {
+export interface CreateParcel {
     parcelNumber: string,
     recipientName: string,
     destinationCountry: string,

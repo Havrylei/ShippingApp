@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static ShippingApi.Infrastructure.Constants;
 
-namespace ShippingApi.Infrastructure.DTOs
+namespace ShippingApi.Infrastructure.DTOs.CreateShipmentDtos
 {
-    public class ParcelBagDto
+    public class CreateParcelBagDto
     {
         [Required]
         [StringLength(BagNumberMaxSize, ErrorMessage = "Max bag number length is 15 characters")]
         public string BagNumber { get; set; }
         [Required]
-        public ICollection<ParcelDto> Parcels { get; set; }
+        public ICollection<CreateParcelDto> Parcels { get; set; }
     }
 }

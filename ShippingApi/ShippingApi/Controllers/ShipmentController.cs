@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShippingApi.Infrastructure.Attributes;
-using ShippingApi.Infrastructure.DTOs;
+using ShippingApi.Infrastructure.DTOs.CreateShipmentDtos;
 using ShippingApi.Infrastructure.Enums;
 using ShippingApi.Services.Interfaces;
 
@@ -27,7 +27,7 @@ namespace ShippingApi.Controllers
         [HttpPost("Create")]
         [ValidationFilter]
         [ExceptionFilter]
-        public async Task<IActionResult> CreateShipmentAsync([FromBody] ShipmentDto dto)
+        public async Task<IActionResult> CreateShipmentAsync([FromBody] CreateShipmentDto dto)
         {
             await _shipmentService.CreateShipmentAsync(dto);
 

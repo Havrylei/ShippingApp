@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ShippingApi.Infrastructure;
-using ShippingApi.Infrastructure.DTOs;
+using ShippingApi.Infrastructure.DTOs.CreateShipmentDtos;
+using ShippingApi.Infrastructure.DTOs.ViewShipmentDtos;
 using ShippingApi.Infrastructure.Entities;
 using ShippingApi.Infrastructure.Extensions;
 using ShippingApi.Services.Interfaces;
@@ -19,7 +20,7 @@ namespace ShippingApi.Services
             _shippingDbContext = shippingDbContext;
         }
 
-        public async Task CreateShipmentAsync(ShipmentDto dto)
+        public async Task CreateShipmentAsync(CreateShipmentDto dto)
         {
             if (dto is null)
             {
@@ -42,14 +43,14 @@ namespace ShippingApi.Services
             _shippingDbContext.Dispose();
         }
 
-        public async Task<IEnumerable<ShipmentDto>> GetShipmentsAsync()
+        public async Task<IEnumerable<ViewShipmentDto>> GetShipmentsAsync()
         {
             var shipments = await _shippingDbContext.Shipments
                 .Include(x => x.LetterBags)
                 .Include(x => x.ParcelBags).ThenInclude(x => x.Parcels)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
-            var result = _mapper.Map<IEnumerable<ShipmentDto>>(shipments);
+            var result = _mapper.Map<IEnumerable<ViewShipmentDto>>(shipments);
 
             return result;
         }

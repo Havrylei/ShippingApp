@@ -4,7 +4,7 @@ import ShipmentValidator from 'src/app/utils/validators/shipment-validator';
 import ParcelBagValidator from 'src/app/utils/validators/parcel-bag-validator';
 import LetterBagValidator from 'src/app/utils/validators/letter-bag-validator';
 import ParcelValidator from 'src/app/utils/validators/parcel-validator';
-import { Shipment } from 'src/app/models/shipment';
+import { CreateShipment } from 'src/app/models/create-shipment-models/create-shipment';
 import { ShipmentService } from 'src/app/services/shipment.service';
 import { Router } from '@angular/router';
 import LetterBagFormMapper from 'src/app/utils/formMappers/letter-bag-form-mapper';
@@ -19,7 +19,7 @@ import { ShipmentCreationSteps } from 'src/app/utils/enums/shipment-creation-ste
   styleUrls: ['./create-shipment.component.scss']
 })
 export class CreateShipmentComponent implements OnInit {
-  shipment: Shipment = <Shipment>{};
+  shipment: CreateShipment = <CreateShipment>{};
   shipmentForm: FormGroup;
   airports: String[] = [];
   errorMessages: String[] = [];

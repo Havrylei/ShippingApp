@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Parcel } from 'src/app/models/parcel';
-import { Shipment } from 'src/app/models/shipment';
+import { ViewShipment } from 'src/app/models/view-shipment-models/view-shipment';
 import { ShipmentService } from 'src/app/services/shipment.service';
 
 @Component({
@@ -9,7 +8,7 @@ import { ShipmentService } from 'src/app/services/shipment.service';
   styleUrls: ['./shipment.component.scss']
 })
 export class ShipmentComponent implements OnInit {
-  shipments: Shipment[] = [];
+  shipments: ViewShipment[] = [];
   clickedShipmentNumber: string | undefined;
   msg: string | undefined;
 
@@ -20,6 +19,10 @@ export class ShipmentComponent implements OnInit {
       this.shipments = res;
     });
 
+    this.showMessage();
+  }
+
+  showMessage() {
     let msg = sessionStorage.getItem('msg');
 
     if (msg) {
@@ -31,10 +34,6 @@ export class ShipmentComponent implements OnInit {
         this.msg = undefined;
       }, 5000);
     }
-  }
-
-  getParcelsTotalPrice(parcels: Parcel[]): number {
-    return parcels.reduce((sum, p) => sum + p.price, 0);
   }
 
   convertUtcToLocal(date: Date): Date {

@@ -2,7 +2,7 @@
 using AutoFixture.DataAnnotations;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using ShippingApi.Infrastructure.DTOs;
+using ShippingApi.Infrastructure.DTOs.CreateShipmentDtos;
 using ShippingApi.Infrastructure.Entities;
 using ShippingApi.Services;
 
@@ -22,7 +22,7 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ShipmentDtoWithParcelAndLetterBags_Saves()
         {
             // Arrange
-            var dto = _fixture.Create<ShipmentDto>();
+            var dto = _fixture.Create<CreateShipmentDto>();
             var expectedBagAmount = dto.ParcelBags.Count + dto.LetterBags.Count;
             var expectedParcelAmount = dto.ParcelBags.Sum(x => x.Parcels.Count);
 
@@ -43,7 +43,7 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ShipmentDtoWithOnlyParcelBags_Saves()
         {
             // Arrange
-            var dto = _fixture.Build<ShipmentDto>().With(x => x.LetterBags, new List<LetterBagDto>()).Create();
+            var dto = _fixture.Build<CreateShipmentDto>().With(x => x.LetterBags, new List<CreateLetterBagDto>()).Create();
             var expectedBagAmount = dto.ParcelBags.Count;
             var expectedParcelAmount = dto.ParcelBags.Sum(x => x.Parcels.Count);
 
@@ -64,7 +64,7 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ShipmentDtoWithOnlyLetterBags_Saves()
         {
             // Arrange
-            var dto = _fixture.Build<ShipmentDto>().With(x => x.ParcelBags, new List<ParcelBagDto>()).Create();
+            var dto = _fixture.Build<CreateShipmentDto>().With(x => x.ParcelBags, new List<CreateParcelBagDto>()).Create();
             var expectedBagAmount = dto.LetterBags.Count;
             var expectedParcelAmount = 0;
 
@@ -85,8 +85,8 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ShipmentDtoWithExistingShipmentNumber_ThrowsArgumentException()
         {
             // Arrange
-            var existingShipment = _fixture.Create<ShipmentDto>();
-            var dto = _fixture.Build<ShipmentDto>()
+            var existingShipment = _fixture.Create<CreateShipmentDto>();
+            var dto = _fixture.Build<CreateShipmentDto>()
                 .With(x => x.ShipmentNumber, existingShipment.ShipmentNumber)
                 .Create();
 
@@ -104,9 +104,9 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ShipmentDtoWithNoBags_ThrowsArgumentException()
         {
             // Arrange
-            var dto = _fixture.Build<ShipmentDto>()
-                .With(x => x.ParcelBags, new List<ParcelBagDto>())
-                .With(x => x.LetterBags, new List<LetterBagDto>())
+            var dto = _fixture.Build<CreateShipmentDto>()
+                .With(x => x.ParcelBags, new List<CreateParcelBagDto>())
+                .With(x => x.LetterBags, new List<CreateLetterBagDto>())
                 .Create();
 
             // Act
@@ -120,7 +120,7 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ShipmentDtoWithNullBags_ThrowsArgumentException()
         {
             // Arrange
-            var dto = _fixture.Build<ShipmentDto>()
+            var dto = _fixture.Build<CreateShipmentDto>()
                 .Without(x => x.ParcelBags)
                 .Without(x => x.LetterBags)
                 .Create();
@@ -136,7 +136,7 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ShipmentDtoIsNull_ThrowsArgumentNullException()
         {
             // Arrange
-            var dto = default(ShipmentDto);
+            var dto = default(CreateShipmentDto);
 
             // Act
             var action = async () => await _shipmentService.CreateShipmentAsync(dto);
@@ -149,11 +149,11 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ParcelBagWithExistingBagNumber_ThrowsArgumentException()
         {
             // Arrange
-            var existingShipment = _fixture.Create<ShipmentDto>();
-            var dto = _fixture.Build<ShipmentDto>()
-                .With(x => x.ParcelBags, new List<ParcelBagDto>
+            var existingShipment = _fixture.Create<CreateShipmentDto>();
+            var dto = _fixture.Build<CreateShipmentDto>()
+                .With(x => x.ParcelBags, new List<CreateParcelBagDto>
                     {
-                        _fixture.Build<ParcelBagDto>()
+                        _fixture.Build<CreateParcelBagDto>()
                             .With(x => x.BagNumber, existingShipment.ParcelBags.First().BagNumber)
                             .Create()
                     })
@@ -172,11 +172,11 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_LetterBagWithExistingBagNumber_ThrowsArgumentException()
         {
             // Arrange
-            var existingShipment = _fixture.Create<ShipmentDto>();
-            var dto = _fixture.Build<ShipmentDto>()
-                .With(x => x.LetterBags, new List<LetterBagDto>
+            var existingShipment = _fixture.Create<CreateShipmentDto>();
+            var dto = _fixture.Build<CreateShipmentDto>()
+                .With(x => x.LetterBags, new List<CreateLetterBagDto>
                     {
-                        _fixture.Build<LetterBagDto>()
+                        _fixture.Build<CreateLetterBagDto>()
                             .With(x => x.BagNumber, existingShipment.ParcelBags.First().BagNumber)
                             .Create()
                     })
@@ -195,11 +195,11 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ParcelBagWithNoParcels_ThrowsArgumentException()
         {
             // Arrange
-            var dto = _fixture.Build<ShipmentDto>()
-                .With(x => x.ParcelBags, new List<ParcelBagDto>
+            var dto = _fixture.Build<CreateShipmentDto>()
+                .With(x => x.ParcelBags, new List<CreateParcelBagDto>
                     {
-                        _fixture.Build<ParcelBagDto>()
-                            .With(x => x.Parcels, new List<ParcelDto>())
+                        _fixture.Build<CreateParcelBagDto>()
+                            .With(x => x.Parcels, new List<CreateParcelDto>())
                             .Create()
                     })
                 .Create();
@@ -215,10 +215,10 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ParcelBagWithNullParcels_ThrowsArgumentException()
         {
             // Arrange
-            var dto = _fixture.Build<ShipmentDto>()
-                .With(x => x.ParcelBags, new List<ParcelBagDto>
+            var dto = _fixture.Build<CreateShipmentDto>()
+                .With(x => x.ParcelBags, new List<CreateParcelBagDto>
                     {
-                        _fixture.Build<ParcelBagDto>()
+                        _fixture.Build<CreateParcelBagDto>()
                             .Without(x => x.Parcels)
                             .Create()
                     })
@@ -235,15 +235,15 @@ namespace ShippingApi.Tests.Services
         public async Task CreateShipmentAsync_ParcelWithExistingParcelNumber_ThrowsArgumentException()
         {
             // Arrange
-            var existingShipment = _fixture.Create<ShipmentDto>();
+            var existingShipment = _fixture.Create<CreateShipmentDto>();
             var existingParcelNumber = existingShipment.ParcelBags.First().Parcels.First().ParcelNumber;
-            var dto = _fixture.Build<ShipmentDto>()
-                .With(x => x.ParcelBags, new List<ParcelBagDto>
+            var dto = _fixture.Build<CreateShipmentDto>()
+                .With(x => x.ParcelBags, new List<CreateParcelBagDto>
                     {
-                        _fixture.Build<ParcelBagDto>()
-                            .With(x => x.Parcels, new List<ParcelDto>
+                        _fixture.Build<CreateParcelBagDto>()
+                            .With(x => x.Parcels, new List<CreateParcelDto>
                             {
-                                _fixture.Build<ParcelDto>()
+                                _fixture.Build<CreateParcelDto>()
                                     .With(x => x.ParcelNumber, existingParcelNumber)
                                     .Create()
                             })

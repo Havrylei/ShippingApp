@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static ShippingApi.Infrastructure.Constants;
 
-namespace ShippingApi.Infrastructure.DTOs
+namespace ShippingApi.Infrastructure.DTOs.CreateShipmentDtos
 {
-    public class ParcelDto
+    public class CreateParcelDto
     {
         [Required]
         [RegularExpression(@"[a-zA-z]{2}\d{6}[a-zA-z]{2}", ErrorMessage = "Incorrect parcel number format")]

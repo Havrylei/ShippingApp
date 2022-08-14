@@ -4,8 +4,9 @@ using ShippingApi.Services.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using AutoFixture;
-using ShippingApi.Infrastructure.DTOs;
 using AutoFixture.DataAnnotations;
+using ShippingApi.Infrastructure.DTOs.CreateShipmentDtos;
+using ShippingApi.Infrastructure.DTOs.ViewShipmentDtos;
 
 namespace ShippingApi.Tests.Controllers
 {
@@ -28,7 +29,7 @@ namespace ShippingApi.Tests.Controllers
         public async Task CreateShipmentAsync_ValidShipmentDto_ReturnsOkResult()
         {
             // Arrange
-            var dto = _fixture.Create<ShipmentDto>();
+            var dto = _fixture.Create<CreateShipmentDto>();
 
             _shipmentServiceMock.Setup(x => x.CreateShipmentAsync(dto)).Returns(Task.CompletedTask);
 
@@ -45,7 +46,7 @@ namespace ShippingApi.Tests.Controllers
         public async Task GetShipmentsAsync_ReturnsOkObjectResult()
         {
             // Arrange
-            var list = _fixture.Create<IEnumerable<ShipmentDto>>();
+            var list = _fixture.Create<IEnumerable<ViewShipmentDto>>();
 
             _shipmentServiceMock.Setup(x => x.GetShipmentsAsync()).Returns(Task.FromResult(list));
 
@@ -63,7 +64,7 @@ namespace ShippingApi.Tests.Controllers
         {
             // Arrange
             _shipmentServiceMock.Setup(x => x.GetShipmentsAsync())
-                .Returns(Task.FromResult((IEnumerable<ShipmentDto>)new List<ShipmentDto>()));
+                .Returns(Task.FromResult((IEnumerable<ViewShipmentDto>)new List<ViewShipmentDto>()));
 
             // Act
             var result = await _shipmentController.GetShipmentsAsync();

@@ -1,10 +1,10 @@
 import { FormGroup } from "@angular/forms";
-import { ParcelBag } from "src/app/models/parcel_bag";
+import { CreateParcelBag } from "src/app/models/create-shipment-models/create-parcel_bag";
 
 export default class ParcelBagFormMapper {
-    static map(form: FormGroup): ParcelBag {
+    static map(form: FormGroup): CreateParcelBag {
         let ctrls = form.controls;
-        let parcelBag = <ParcelBag>{
+        let parcelBag = <CreateParcelBag>{
             bagNumber: ctrls['bagNumber'].value
         }
 

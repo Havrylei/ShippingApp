@@ -2,9 +2,9 @@
 using ShippingApi.Infrastructure.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShippingApi.Infrastructure.DTOs
+namespace ShippingApi.Infrastructure.DTOs.CreateShipmentDtos
 {
-    public class ShipmentDto
+    public class CreateShipmentDto
     {
         [Required]
         [RegularExpression(@"[a-zA-z\d]{3}-[a-zA-z\d]{6}", ErrorMessage = "Incorrect shipment number format")]
@@ -18,7 +18,7 @@ namespace ShippingApi.Infrastructure.DTOs
         [Required]
         [FutureDate(ErrorMessage = "The flight date couldn't be in past")]
         public DateTime FlightDate { get; set; }
-        public ICollection<LetterBagDto> LetterBags { get; set; }
-        public ICollection<ParcelBagDto> ParcelBags { get; set; }
+        public ICollection<CreateLetterBagDto> LetterBags { get; set; }
+        public ICollection<CreateParcelBagDto> ParcelBags { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 import { FormGroup } from "@angular/forms";
-import { LetterBag } from "src/app/models/letter_bag";
+import { CreateLetterBag } from "src/app/models/create-shipment-models/create-letter_bag";
 
 export default class LetterBagFormMapper {
-    static map(form: FormGroup): LetterBag {
+    static map(form: FormGroup): CreateLetterBag {
         let ctrls = form.controls;
-        let letterBag = <LetterBag>{
+        let letterBag = <CreateLetterBag>{
             bagNumber: ctrls['bagNumber'].value,
             countOfLetters: ctrls['countOfLetters'].value,
             weight: ctrls['weight'].value,
