@@ -102,6 +102,7 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" formControlName="bindingKey">
                 </form>
                 <form [formGroup]="bagForm" *ngIf="letterBagForms.includes(bagForm)">
                     <div class="d-flex justify-content-between">
@@ -200,22 +201,25 @@
                 <button type="button" class="btn btn-secondary"
                     (click)="resetValidation(); currentStep = shipmentCreationSteps.ShipmentCreationStep">Previous</button>
                 <button [disabled]="!bagForms.length" type="button" class="btn btn-success" (click)="onSubmitBags()">
-                    {{parcelBagForms.size ? 'To Parcels Creation' : 'To Finalize Step'}}
+                    {{parcelBagForms.length ? 'To Parcels Creation' : 'To Finalize Step'}}
                 </button>
             </div>
         </div>
         <div *ngIf="currentStep === shipmentCreationSteps.ParcelCreationStep">
             <h3>Step Third: Create Parcels:</h3>
             <hr>
-            <div *ngFor="let parcelBagForm of parcelBagForms.keys()">
+            <div *ngFor="let parcelBagForm of parcelBagForms">
                 <div class="d-flex justify-content-between">
                     <h6>Bag number {{parcelBagForm.controls['bagNumber'].value}}</h6>
-                    <button type="button" class="btn btn-outline-dark" (click)="addParcel(parcelBagForm)">Add
+                    <button type="button" class="btn btn-outline-dark"
+                        (click)="addParcel(fetchBindingKey(parcelBagForm))">Add
                         Parcel</button>
                 </div>
-                <div class="ps-4" *ngFor="let parcelForm of parcelBagForms.get(parcelBagForm); let index = index">
+                <div class="ps-4"
+                    *ngFor="let parcelForm of parcelForms.get(fetchBindingKey(parcelBagForm)); let index = index">
                     <span><b>Parcel #{{index + 1}}</b><i role="button" class="text-danger user-select-none"
-                            (click)="removeParcel(parcelBagForm, parcelForm)"> (remove parcel)</i></span>
+                            (click)="removeParcel(fetchBindingKey(parcelBagForm), parcelForm)"> (remove
+                            parcel)</i></span>
                     <form [formGroup]="parcelForm">
                         <div class="form-group row my-3">
                             <label class="col-sm-4 col-form-label" for="parcelNumber">Parcel Number <span
@@ -319,7 +323,7 @@
             <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary"
                     (click)="resetValidation(); currentStep = shipmentCreationSteps.BagCreationStep">Previous</button>
-                <button [disabled]="isFinalizeStepDisabled" type="button" class="btn btn-success"
+                <button [disabled]="parcelBagForms.length != parcelForms.size" type="button" class="btn btn-success"
                     (click)="onSubmitParcels()">To Finalize Step</button>
             </div>
         </div>

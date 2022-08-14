@@ -25,7 +25,8 @@ export class CreateShipmentComponent implements OnInit {
   errorMessages: String[] = [];
   bagForms: FormGroup[] = [];
   letterBagForms: FormGroup[] = [];
-  parcelBagForms: Map<FormGroup, FormGroup[]> = new Map<FormGroup, FormGroup[]>;
+  parcelBagForms: FormGroup[] = [];
+  parcelForms: Map<string, FormGroup[]> = new Map<string, FormGroup[]>;
   currentStep: ShipmentCreationSteps = ShipmentCreationSteps.ShipmentCreationStep;
   shipmentSubmitted: boolean = false;
   bagsSubmitted: boolean = false;
@@ -45,7 +46,7 @@ export class CreateShipmentComponent implements OnInit {
   returnToEdit(): void {
     this.resetValidation();
 
-    if (!this.parcelBagForms.size) {
+    if (!this.parcelBagForms.length) {
       this.currentStep = ShipmentCreationSteps.BagCreationStep;
     } else {
       this.currentStep = ShipmentCreationSteps.ParcelCreationStep;
@@ -60,12 +61,12 @@ export class CreateShipmentComponent implements OnInit {
     return this.shipmentForm.controls;
   }
 
-  get isFinalizeStepDisabled(): boolean {
-    return Array.from(this.parcelBagForms.values()).some(x => !x.length);
+  isParcelBag(form: FormGroup): boolean {
+    return this.parcelBagForms.includes(form);
   }
 
-  isParcelBag(form: FormGroup): boolean {
-    return Array.from(this.parcelBagForms.keys()).includes(form);
+  fetchBindingKey(form: FormGroup): string {
+    return form.controls['bindingKey'].value;
   }
 
   onSubmitShipment(): void {
@@ -97,7 +98,7 @@ export class CreateShipmentComponent implements OnInit {
       }
     }
 
-    if (!this.parcelBagForms.size) {
+    if (!this.parcelBagForms.length) {
       this.setupShipment();
       this.currentStep = ShipmentCreationSteps.FinalizeCreationStep;
     } else {
@@ -109,7 +110,7 @@ export class CreateShipmentComponent implements OnInit {
     this.resetValidation();
     this.parcelsSubmitted = true;
 
-    let parcels = Array.from(this.parcelBagForms.values()).reduce((a, b) => a.concat(b), []);
+    let parcels = Array.from(this.parcelForms.values()).reduce((a, b) => a.concat(b), []);
 
     if (parcels.some(x => x.invalid)) {
       return;
@@ -150,7 +151,7 @@ export class CreateShipmentComponent implements OnInit {
   addParcelBag() {
     let form = this.formBuilder.group(ParcelBagValidator.validator());
 
-    this.parcelBagForms.set(form, []);
+    this.parcelBagForms.push(form);
     this.bagForms.push(form);
   }
 
@@ -162,8 +163,14 @@ export class CreateShipmentComponent implements OnInit {
   }
 
   removeParcelBag(form: FormGroup) {
-    if (this.parcelBagForms.get(form)?.length && !confirm("The bag contains parcels. Are you sure to delete?")) {
-      return;
+    let bindingKey = this.fetchBindingKey(form);
+
+    if (this.parcelForms.has(bindingKey)) {
+      if (!confirm("The bag contains parcels. Are you sure to delete?")) {
+        return;
+      }
+
+      this.parcelForms.delete(bindingKey);
     }
 
     let index = this.bagForms.indexOf(form);
@@ -172,7 +179,11 @@ export class CreateShipmentComponent implements OnInit {
       this.bagForms.splice(index, 1);
     }
 
-    this.parcelBagForms.delete(form);
+    index = this.parcelBagForms.indexOf(form);
+
+    if (index !== -1) {
+      this.parcelBagForms.splice(index, 1);
+    }
   }
 
   removeLetterBag(form: FormGroup) {
@@ -189,22 +200,31 @@ export class CreateShipmentComponent implements OnInit {
     }
   }
 
-  addParcel(bagForm: FormGroup) {
-    this.parcelBagForms.get(bagForm)?.push(this.formBuilder.group(ParcelValidator.validator()));
+  addParcel(bindingKey: string) {
+    if (!this.parcelForms.has(bindingKey)) {
+      this.parcelForms.set(bindingKey, []);
+    }
+
+    this.parcelForms.get(bindingKey)?.push(this.formBuilder.group(ParcelValidator.validator()));
   }
 
-  removeParcel(bagForm: FormGroup, parcelForm: FormGroup) {
-    let parcels = this.parcelBagForms.get(bagForm);
+  removeParcel(bindingKey: string, parcelForm: FormGroup) {
+    let parcels = this.parcelForms.get(bindingKey);
     let index = parcels?.indexOf(parcelForm) ?? -1;
 
     if (index !== -1) {
       parcels?.splice(index, 1);
     }
+
+    if (parcels?.length === 0) {
+      this.parcelForms.delete(bindingKey);
+    }
   }
 
   setupShipment() {
-    let parcelBags = Array.from(this.parcelBagForms.keys()).map(parcelBagForm => {
-      let parcels = this.parcelBagForms.get(parcelBagForm)?.map(parcelForm => ParcelFormMapper.map(parcelForm)) ?? [];
+    let parcelBags = this.parcelBagForms.map(parcelBagForm => {
+      let bindingKey = this.fetchBindingKey(parcelBagForm);
+      let parcels = this.parcelForms.get(bindingKey)?.map(parcelForm => ParcelFormMapper.map(parcelForm)) ?? [];
       let bag = ParcelBagFormMapper.map(parcelBagForm)
 
       bag.parcels = parcels;
