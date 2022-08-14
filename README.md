@@ -1,5 +1,5 @@
 ## Prerequisites
-- Docker should be installed
+- Docker should be installed(Linux container)
 - DotNet should be installed(.Net6.0 preferably)
 
 ## Installation
