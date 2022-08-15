@@ -94,6 +94,11 @@
         <div *ngIf="currentStep === shipmentCreationSteps.BagCreationStep">
             <h3>Step Second: Create Bags:</h3>
             <hr>
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-dark" (click)="addParcelBag()">Add Parcel Bag</button>
+                <button type="button" class="btn btn-outline-dark" (click)="addLetterBag()">Add Letter Bag</button>
+            </div>
+            <hr>
             <div *ngFor="let bagForm of bagForms">
                 <form [formGroup]="bagForm" *ngIf="isParcelBag(bagForm)">
                     <div class="d-flex justify-content-between">
@@ -225,11 +230,6 @@
                 </form>
                 <hr>
             </div>
-            <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-outline-dark" (click)="addParcelBag()">Add Parcel Bag</button>
-                <button type="button" class="btn btn-outline-dark" (click)="addLetterBag()">Add Letter Bag</button>
-            </div>
-            <hr>
             <div class="d-flex justify-content-end" *ngIf="bagNumberMatch">
                 <p class="text-danger">
                     *Bag numbers cannot match
