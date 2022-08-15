@@ -9,6 +9,7 @@ import { ShipmentComponent } from './components/shipment/shipment.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ShipmentService } from './services/shipment.service';
 import { CreateShipmentComponent } from './components/create-shipment/create-shipment.component';
+import { CountryService } from './services/country.service';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { CreateShipmentComponent } from './components/create-shipment/create-shi
     ReactiveFormsModule
   ],
   providers: [
+    CountryService,
     ShipmentService
   ],
   bootstrap: [AppComponent]

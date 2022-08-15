@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ShippingApi.Infrastructure.DTOs;
 using ShippingApi.Infrastructure.DTOs.CreateShipmentDtos;
 using ShippingApi.Infrastructure.DTOs.ViewShipmentDtos;
 using ShippingApi.Infrastructure.Entities;
@@ -15,6 +16,9 @@ namespace ShippingApi.Infrastructure
                 .ForMember(d => d.BagType, o => o.MapFrom(s => BagType.Letter))
                 .ForMember(d => d.TotalItems, o => o.MapFrom(s => s.CountOfLetters))
                 .ForMember(d => d.TotalPrice, o => o.MapFrom(s => s.Price));
+            CreateMap<Country, CountryDto>()
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
+                .ForMember(d => d.Code, o => o.MapFrom(s => s.Code));
             CreateMap<ParcelBag, ViewBagDto>()
                 .ForMember(d => d.BagNumber, o => o.MapFrom(s => s.BagNumber))
                 .ForMember(d => d.BagType, o => o.MapFrom(s => BagType.Letter))

@@ -15,7 +15,9 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MapperConfig));
+builder.Services.AddTransient<ICountryService, CountryService>();
 builder.Services.AddTransient<IShipmentService, ShipmentService>();
+builder.Services.AddMemoryCache();
 builder.Services.AddDbContext<ShippingDbContext>(options =>
     options
         .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))

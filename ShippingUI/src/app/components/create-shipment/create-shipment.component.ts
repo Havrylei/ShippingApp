@@ -12,6 +12,8 @@ import ParcelFormMapper from 'src/app/utils/formMappers/parcel-form-mapper';
 import ParcelBagFormMapper from 'src/app/utils/formMappers/parcel-bag-form-mapper';
 import ShipmentFormMapper from 'src/app/utils/formMappers/shipment-form-mapper';
 import { ShipmentCreationSteps } from 'src/app/utils/enums/shipment-creation-steps';
+import { Country } from 'src/app/models/country';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-create-shipment',
@@ -22,6 +24,7 @@ export class CreateShipmentComponent implements OnInit {
   shipment: CreateShipment = <CreateShipment>{};
   shipmentForm: FormGroup;
   airports: String[] = [];
+  countries: Country[] = [];
   errorMessages: String[] = [];
   bagForms: FormGroup[] = [];
   letterBagForms: FormGroup[] = [];
@@ -35,12 +38,16 @@ export class CreateShipmentComponent implements OnInit {
   parcelMatch: boolean = false;
   sendingRequest: boolean = false;
 
-  constructor(private formBuilder: FormBuilder, private service: ShipmentService, private router: Router) {
+  constructor(private formBuilder: FormBuilder,
+    private shipmentService: ShipmentService,
+    private countryService: CountryService,
+    private router: Router) {
     this.shipmentForm = this.formBuilder.group(ShipmentValidator.validator());
   }
 
   ngOnInit(): void {
-    this.service.getAirports().subscribe(res => this.airports = res);
+    this.shipmentService.getAirports().subscribe(res => this.airports = res);
+    this.countryService.getCountries().subscribe(res => this.countries = res);
   }
 
   returnToEdit(): void {
@@ -131,7 +138,7 @@ export class CreateShipmentComponent implements OnInit {
   finalSubmit(): void {
     this.sendingRequest = true;
 
-    this.service.createShipment(this.shipment).subscribe(
+    this.shipmentService.createShipment(this.shipment).subscribe(
       _ => {
         sessionStorage.setItem('msg', 'The shipment \'' + this.shipment.shipmentNumber.toUpperCase() + '\' has been created successfully');
         this.router.navigate(['/']);

@@ -5,7 +5,7 @@ export default class ParcelValidator {
         return {
             parcelNumber: ['', [Validators.required, Validators.pattern('^[a-zA-z]{2}[0-9]{6}[a-zA-z]{2}$')]],
             recipientName: ['', [Validators.required, Validators.maxLength(100)]],
-            destinationCountry: ['', [Validators.required, Validators.pattern('^[a-zA-z]{2}$')]],
+            destinationCountry: ['', Validators.required],
             weight: [
                 '', [
                     Validators.required,
