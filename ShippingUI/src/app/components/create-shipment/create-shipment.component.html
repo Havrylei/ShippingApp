@@ -124,6 +124,8 @@
                                 </div>
                                 <div *ngIf="bagForm.controls['bagNumber'].errors['maxlength']">Max bag number length
                                     is 15 characters</div>
+                                <div *ngIf="bagForm.controls['bagNumber'].errors['pattern']">No special symbols allowed
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -153,6 +155,8 @@
                                 </div>
                                 <div *ngIf="bagForm.controls['bagNumber'].errors['maxlength']">Max bag number length
                                     is 15 characters</div>
+                                <div *ngIf="bagForm.controls['bagNumber'].errors['pattern']">No special symbols allowed
+                                </div>
                             </div>
                         </div>
                     </div>

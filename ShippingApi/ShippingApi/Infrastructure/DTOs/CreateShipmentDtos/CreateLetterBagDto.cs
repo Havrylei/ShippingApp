@@ -7,6 +7,7 @@ namespace ShippingApi.Infrastructure.DTOs.CreateShipmentDtos
     {
         [Required]
         [StringLength(BagNumberMaxSize, ErrorMessage = "Max bag number length is 15 characters")]
+        [RegularExpression(@"[a-zA-z\d]+", ErrorMessage = "No special symbols allowed")]
         public string BagNumber { get; set; }
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Incorrect count of letters")]
