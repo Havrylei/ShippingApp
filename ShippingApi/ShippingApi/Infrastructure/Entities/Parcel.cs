@@ -12,6 +12,7 @@ namespace ShippingApi.Infrastructure.Entities
         public decimal Price { get; set; }
         public Guid ParcelBagId { get; set; }
         public ParcelBag ParcelBag { get; set; }
+        public virtual Country Country { get; set; }
 
         public static void Configure(ModelBuilder modelBuilder)
         {
@@ -24,6 +25,7 @@ namespace ShippingApi.Infrastructure.Entities
             modelBuilder.Entity<Parcel>().Property(m => m.Price).HasPrecision(8, 2).IsRequired();
             modelBuilder.Entity<Parcel>().Property(m => m.ParcelBagId).IsRequired();
             modelBuilder.Entity<Parcel>().HasIndex(m => m.ParcelNumber).IsUnique();
+            modelBuilder.Entity<Parcel>().HasOne(m => m.Country).WithMany().HasForeignKey(m => m.DestinationCountry);
         }
     }
 }

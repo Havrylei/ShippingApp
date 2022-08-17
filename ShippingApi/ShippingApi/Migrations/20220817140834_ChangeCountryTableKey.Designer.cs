@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShippingApi.Infrastructure;
 
@@ -11,9 +12,10 @@ using ShippingApi.Infrastructure;
 namespace ShippingApi.Migrations
 {
     [DbContext(typeof(ShippingDbContext))]
-    partial class ShippingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220817140834_ChangeCountryTableKey")]
+    partial class ChangeCountryTableKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1358,8 +1360,6 @@ namespace ShippingApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DestinationCountry");
-
                     b.HasIndex("ParcelBagId");
 
                     b.HasIndex("ParcelNumber")
@@ -1430,19 +1430,11 @@ namespace ShippingApi.Migrations
 
             modelBuilder.Entity("ShippingApi.Infrastructure.Entities.Parcel", b =>
                 {
-                    b.HasOne("ShippingApi.Infrastructure.Entities.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("DestinationCountry")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ShippingApi.Infrastructure.Entities.ParcelBag", "ParcelBag")
                         .WithMany("Parcels")
                         .HasForeignKey("ParcelBagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Country");
 
                     b.Navigation("ParcelBag");
                 });
